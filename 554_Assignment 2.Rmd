@@ -44,7 +44,7 @@ The following code will be used to read in the data for this assignment:
 
 ```{r}
 # Set your working directory to where HW2data.Rdata and VR.graph are located
-setwd("/Users/Walker/Desktop/CSSS 554/Assignment 2")
+setwd("./Data")
 load("HW2data.Rdata")
 # Expected counts are stored in Exp.mv3[,"Lung"]
 # Observed counts are stored in Obs.mv3[,"Lung"]
@@ -86,7 +86,7 @@ dmap <- st_as_sf(data)
 Now we can map $Y_i$, which is the observed count of cases for Lung
 Cancer:
 
-```{r, echo=TRUE, fig.height=4.5,fig.width=4, fig.cap="Observed Cases for Lung Cancer Data In Valencia",eval=T}
+```{r, echo=TRUE, fig.height=4.5, fig.cap="Observed Cases for Lung Cancer Data In Valencia",eval=T}
 pal = function(n) brewer.pal(n, "Oranges")
 plot(dmap["cases"], nbreaks = 8, pal=pal, breaks = "equal", main="Observed Lung Cancer Cases", sub="Yi for Valencia")
 ```
@@ -103,7 +103,7 @@ Observations:
 Using the same spatial object dataframe, we can map $E_i$, which is the
 Expected count of cases for Lung Cancer:
 
-```{r, echo=TRUE, fig.height=4.5,fig.width=4, fig.cap="Expected Cases for Lung Cancer Data In Valencia",eval=T}
+```{r, echo=TRUE, fig.height=4.5, fig.cap="Expected Cases for Lung Cancer Data In Valencia",eval=T}
 pal = function(n) brewer.pal(n, "Blues")
 plot(dmap["expected"], nbreaks = 8, pal=pal, breaks = "equal", main="Expected Lung Cancer Cases", sub="Ei for Valencia")
 ```
@@ -144,7 +144,7 @@ for $i = 1,...,n$.
 
 We already calculated the SMRs previously, so we can plot them below:
 
-```{r, echo=TRUE, fig.height=4.5,fig.width=4, fig.cap="SMRs Lung Cancer Data In Valencia",eval=T}
+```{r, echo=TRUE, fig.height=4.5, fig.cap="SMRs Lung Cancer Data In Valencia",eval=T}
 pal = function(n) brewer.pal(n, "Purples")
 plot(dmap["SMR"], nbreaks = 8, pal = pal, breaks = "equal", main="SMRs for Lung Cancer Cases")
 ```
@@ -166,7 +166,7 @@ Observations:
 The standard errors are given by $\sqrt{ \widehat{θ_i}/E_i}.$
 
 We can use ggplot to help plot:
-```{r, echo=TRUE, fig.height=4.2,fig.width=5, tidy.opts=list(width.cutoff=60),eval=T}
+```{r, echo=TRUE, fig.height=4,fig.width=4, tidy.opts=list(width.cutoff=60),eval=T}
 ggplot(data.frame(se=sqrt(data$SMR/data$expected),SMR=data$SMR),aes(x=se,y=SMR)) + geom_point() + labs(y="SMR",x="Standard Error", title='Plot of SMR vs Estimated Standard Errors') +
 theme(plot.title = element_text(hjust = 0.5))
 ```
@@ -227,7 +227,7 @@ plot(dmap["fit0fitted"], pal = pal, nbreaks = 8, breaks = "equal", main="Map of 
 
 ### Question 2(c): Plot these posterior RR estimates against the SMRs, and comment.
 
-```{r,  fig.height=4.5}
+```{r, fig.height=4, fig.width=4}
 # Find the Standard Errors
 se <- sqrt(dmap$SMR/dmap$expected)
 # Plotting Posterior Median vs SMR
@@ -274,7 +274,7 @@ I will fit a INLA function using the bym2 model, with default $β_0$ priors and 
 # Assigning a region column with a numeric identifier
 dmap$region <- 1:nrow(data)
 # Running INLA with given specifications
-formula <- cases ~ 1 + f(region, model="bym2", graph="VR.graph", scale.model=T, constr=T,
+formula <- cases ~ 1 + f(region, model="bym2", graph="./Data/VR.graph", scale.model=T, constr=T,
                          hyper=list(phi=list(prior="pc", param=c(0.5, 0.5), initial=1), prec=list(prior="pc.prec", param=c(0.3,0.01),initial=5)))
 
 model.fit1 <- inla(formula, data=dmap, family="poisson",E=expected, control.predictor=list(compute=TRUE),
