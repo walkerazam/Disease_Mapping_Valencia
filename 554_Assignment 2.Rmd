@@ -56,7 +56,7 @@ load("HW2data.Rdata")
 Let $Y_i$ and $E_i$, $i = 1,...,n$, denote the observed and expected
 counts in region $i$, $i = 1,...,n$. Then consider the model
 
-$$\mbox{Y}_i|{E}_i ~ Poisson({E_i}{θ_i})$$
+$$\mbox{Y}_i|{E}_i ~ Poisson({E_i}{\theta_i})$$
 
 ### Question 1(a): Provide a map of the observed counts Yi
 
@@ -139,7 +139,7 @@ sparsely-populated rural areas in the north have high SMRs).
 
 ### Question 1(c): Provide a map of the SMRs
 
-SMRs are defined as $$\mbox{SMR}_i = (\widehatθ_i) = \frac{Y_i}{E_i},$$
+SMRs are defined as $$\mbox{SMR}_i = (\widehat\theta_i) = \frac{Y_i}{E_i},$$
 for $i = 1,...,n$.
 
 We already calculated the SMRs previously, so we can plot them below:
@@ -163,7 +163,7 @@ Observations:
 
 ### Question 1(d): Plot the SMRs versus the estimated standard errors
 
-The standard errors are given by $\sqrt{ \widehat{θ_i}/E_i}.$
+The standard errors are given by $\sqrt{ \widehat{\theta_i}/E_i}.$
 
 We can use ggplot to help plot:
 ```{r, echo=TRUE, fig.height=4,fig.width=4, tidy.opts=list(width.cutoff=60),eval=T}
@@ -184,8 +184,8 @@ e_i | \sigma_e^{2} & \sim_{iid}& \mbox{N}(0,\sigma_e^{2})
 \end{eqnarray*}
 for $i$, $i = 1,...,n$.
 
-### Question 2(a): Using the inla function in R fit this model using the default priors for $β_0$ and $σ_e$.
-(Report the posterior medians and 95% intervals for $β_0$ and for $σ_e$.)
+### Question 2(a): Using the inla function in R fit this model using the default priors for $B_0$ and $\sigma_e$.
+(Report the posterior medians and 95% intervals for $\beta_0$ and for $\sigma_e$.)
 
 I will fit the Poisson-Lognormal model in INLA to the lung cancer data, with no prior specifications given (default prior):
 ```{r,eval=T}
@@ -193,26 +193,26 @@ I will fit the Poisson-Lognormal model in INLA to the lung cancer data, with no 
 model.fit0 <- inla(cases ~ 1 + f(MUNI_ID, model="iid"), data=dmap, family="poisson", E=expected)
 ```
 
-To fit the model above, we used MUNI_ID as an index to assign random effects to each observation, since it functions as a Region Identifier. The Poisson family was also specified, with default priors. We can see what the summary (posterior median and 95% intervals) are for both $β_0$ and $σ_e$:
+To fit the model above, we used MUNI_ID as an index to assign random effects to each observation, since it functions as a Region Identifier. The Poisson family was also specified, with default priors. We can see what the summary (posterior median and 95% intervals) are for both $\beta_0$ and $\sigma_e$:
 ```{r,eval=T}
-# Results for the β_0:
+# Results for the \beta_0:
 model.fit0$summary.fixed[,1:5]
 ```
 
-* For $β_0$ the posterior median is -0.1336088, and the interval is -0.1657331 to -0.1028069
+* For $\beta_0$ the posterior median is -0.1336088, and the interval is -0.1657331 to -0.1028069
 
 ```{r,eval=T}
 # Results for the precision:
 model.fit0$summary.hyper[,1:5] 
 ```
 ```{r,eval=T}
-# Results for the σ_e:
+# Results for the sigma_e:
 sigma <- 1/sqrt(model.fit0$summary.hyper[, 4])
 lower <- 1/sqrt(model.fit0$summary.hyper[, 3])
 upper <- 1/sqrt(model.fit0$summary.hyper[, 5])
 print(c(sigma, lower, upper))
 ```
-* For $σ_e$ the posterior median is 0.2527954, and the interval is 0.2251484 to 0.2833964
+* For $\sigma_e$ the posterior median is 0.2527954, and the interval is 0.2251484 to 0.2833964
 
 ### Question 2(b): Extract the posterior medians of the relative risk (RR) estimates and provide a map of these.
 
@@ -268,7 +268,7 @@ I will smooth the SMRs for the Valencian lung cancer data using the disease mapp
 
 ### Question 3(a): INLA with BYM2 model
 
-I will fit a INLA function using the bym2 model, with default $β_0$ priors and given prior for spatial and non-spatial effects as follows:
+I will fit a INLA function using the bym2 model, with default $\beta_0$ priors and given prior for spatial and non-spatial effects as follows:
 
 ```{r}
 # Assigning a region column with a numeric identifier
@@ -289,9 +289,9 @@ model.fit1$summary.hyper[,1:5]
 model.fit1$summary.hyper[2,4]
 ```
 
-**Report both the posterior medians and 95% intervals for β0, the total variance of the random effects, and the proportion of the total variance attributed to the spatial random effect**:
+**Report both the posterior medians and 95% intervals for B0, the total variance of the random effects, and the proportion of the total variance attributed to the spatial random effect**:
 
-For $β_0$ the posterior median is -0.1525523 and the 95% interval is -0.177555 to -0.1280541.
+For $\beta_0$ the posterior median is -0.1525523 and the 95% interval is -0.177555 to -0.1280541.
 
 The posterior median of the total standard variance of random effects is: `r 1/sqrt(model.fit1$summary.hyper[1,4])`
 
