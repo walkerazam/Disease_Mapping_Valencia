@@ -91,7 +91,7 @@ pal = function(n) brewer.pal(n, "Oranges")
 plot(dmap["cases"], nbreaks = 8, pal=pal, breaks = "equal", main="Observed Lung Cancer Cases", sub="Yi for Valencia")
 ```
 
-Observations:
+Observations (Figure 1):
 
 -   It seems that just plotting observed cases doesn't tell us anything
     too revealing. There is one region, in the mid-east, that appears
@@ -108,7 +108,7 @@ pal = function(n) brewer.pal(n, "Blues")
 plot(dmap["expected"], nbreaks = 8, pal=pal, breaks = "equal", main="Expected Lung Cancer Cases", sub="Ei for Valencia")
 ```
 
-Observations:
+Observations (Figure 2):
 
 -   Again, it seems that just plotting expected cases alone doesn't tell
     us anything too revealing.
@@ -121,7 +121,7 @@ Observations:
 
 The variance of the estimate in area $i$ is
 $${\mbox{var}}(\mbox{SMR}_i) = \frac{\mbox{SMR}_i}{E_i},$$ which will be
-large if $E_i$ is small.
+large if $E_i$ is small. So from that we can see the summary of expected:
 
 ```{r}
 summary(dmap$expected)
@@ -132,10 +132,6 @@ range 0.228--6804.364.
 
 From this range we can expect that extreme SMRs may be based on small
 Expected cases (possibly due to rural areas being underpopulated).
-
-This variability suggests that there is a good chance that the extreme
-SMRs are based on small expected numbers (many of the large,
-sparsely-populated rural areas in the north have high SMRs).
 
 ### Question 1(c): Provide a map of the SMRs
 
@@ -173,7 +169,7 @@ theme(plot.title = element_text(hjust = 0.5))
 
 * The highest SMRs certainly have the highest Standard Errors
 
-* Some Standard Errors are 0, which arise from 0 SMR values (0 estimates). This may be considered for 0.5 adjustments...
+* Some Standard Errors are 0, which arise from 0 SMR values (0 estimates). This may be considered for 0.5 adjustments, but for the purposes of this assignment, will be left as 0.
 
 ## Question 2: Smoothing SMRs using Disease Mapping Poisson-Lognormal Models
 
@@ -227,7 +223,7 @@ plot(dmap["fit0fitted"], pal = pal, nbreaks = 8, breaks = "equal", main="Map of 
 
 ### Question 2(c): Plot these posterior RR estimates against the SMRs, and comment.
 
-```{r, fig.height=4, fig.width=4}
+```{r, fig.height=6, fig.width=6}
 # Find the Standard Errors
 se <- sqrt(dmap$SMR/dmap$expected)
 # Plotting Posterior Median vs SMR
@@ -313,13 +309,20 @@ Comparing them to the Possion-Lognormal model (IID model from Q2, plotted below 
 
 * This is clear in the southern half of the bym2 map where most values range around 0.8, but in the IID map, the same region has 0.6-1.0.
 
-# REFERENCE MAP FROM Q2:
-```{r, echo=TRUE, fig.height=4.5, fig.cap="Posterior Medians for Relative Risk with default priors", eval=T}
+```{r, echo=TRUE, fig.height=4.5, fig.cap="REFERENCE MAP FROM Q2: Posterior Medians for Relative Risk with default priors", eval=T}
 # Extracting the posterior medians using our fitted model
 dmap$fit0fitted <- model.fit0$summary.fitted.values$`0.5quant`
 # Mapping our results
 pal = function(n) brewer.pal(n,"Purples")
-plot(dmap["fit0fitted"], pal = pal, nbreaks = 8, breaks = "equal", main="Map of Posterior Medians (IID)")
+plot(dmap["fit0fitted"], pal = pal, nbreaks = 8, breaks = "equal", main="REFERENCE MAP FROM Q2: Map of Posterior Medians (IID)")
 ```
 
 
+
+
+
+# Appendix: R-Code Provided
+
+Below I am providing the R code used in this assignment as an Appendix:
+```{r, ref.label=knitr::all_labels(),echo=TRUE,eval=FALSE}
+```
