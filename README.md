@@ -10,6 +10,7 @@ We will carry out disease mapping for lung cancer mortality data for men in the 
 ### Files:
 
 1. Data : Contains data and VR.graph used in R Markdown file
-2. 554-2023-Assignment2.pdf : Contains Assignment Instructions
+2. Docs/554-2023-Assignment2.pdf : Contains Assignment Instructions
 3. 554_Assignment 2.Rmd : R Markdown File with code for Disease Mapping
-4. Valencia Lung Cancer Writeup.pdf : PDF of Markdown File Knit 
+4. Docs/Valencia Lung Cancer Writeup.pdf : PDF of Markdown File Knit
+5. Lung Cancer Disease Mapping Code.R : Raw R Code (not Markdown) 
